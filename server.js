@@ -22,3 +22,12 @@ app.get('/write', function(req, res) {
   res.sendFile(__dirname + '/write.html');
 });
 // 서버에 html파일 전송
+
+app.post('/add', function(req, res) {
+  res.send('전송완료');
+  // req.body.요청할inputname
+  console.log(req.body.title)
+  console.log(req.body.date)
+});
+// 사용자가 /add경로로 POST요청하면 위 코드 실행
+// input에 적은 정보는 요청(req)에 있음 -> 쉽게 꺼내쓰려면 body-parser라이브러리가 필요 (2021이후 express라이브러리에 기본포함되어있음)
