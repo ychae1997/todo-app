@@ -11,3 +11,8 @@ app.listen(8080, function() {
 app.get('/pet', function(req, res){
   res.send('펫 용품을 쇼핑할 수 있는 페이지입니다.')
 });
+// 사용자가 /pet 에 방문하면, pet관련 문구 띄어주기
+
+app.get('/', function(req, res){
+  res.sendFile(__dirname + '/index.html')
+});
