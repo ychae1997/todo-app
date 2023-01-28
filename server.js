@@ -7,3 +7,7 @@ app.listen(8080, function() {
 });
 // listen(서버 띄울 포토번호, 띄운 후 실행할 코드)
 // 8080 port로 웹서버를 열고, 잘 열리면 터미널에 listening on 8080을 출력해주세요. (http://localhost:8080/)
+
+app.get('/pet', function(req, res){
+  res.send('펫 용품을 쇼핑할 수 있는 페이지입니다.')
+});
