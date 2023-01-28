@@ -16,3 +16,7 @@ app.get('/pet', function(req, res){
 app.get('/', function(req, res){
   res.sendFile(__dirname + '/index.html');
 });
+app.get('/write', function(req, res) {
+  res.sendFile(__dirname + '/write.html');
+});
+// 서버에 html파일 전송

@@ -33,14 +33,14 @@
   <!-- header Fin -->
   
   <div class="container mt-4">
-    <form> 
+    <form action="/add" method="POST"> 
       <div class="form-group">
         <label for="inputTodo">할 일</label>
         <input type="text" class="form-control" id="inputTodo" name="title">
       </div>
       <div class="form-group">
         <label for="inputDuedate">Due date</label>
-        <input type="text" class="form-control" id="inputDuedate" name="date">
+        <input type="date" class="form-control" id="inputDuedate" name="date">
       </div>
       <button type="submit" class="btn btn-primary">Submit</button>
     </form>
