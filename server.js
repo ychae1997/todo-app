@@ -1,6 +1,8 @@
 const express = require('express');
 const app = express();
 // 서버 띄우기 위한 기본세팅 완료 (express 라이브러리)
+app.use(express.urlencoded({ extended: true }));
+// POST 요청한 데이터 꺼내쓰기 (body-parser) -> 요청데이터 해석을 도와줌
 
 app.listen(8080, function() {
   console.log('listening on 8080');
