@@ -4,14 +4,18 @@ const app = express();
 app.use(express.urlencoded({ extended: true }));
 // POST 요청한 데이터 꺼내쓰기 (body-parser) -> 요청데이터 해석을 도와줌
 
-const MongoClient = require('mongodb').MongoClient;
-// 만든 Database 접속(Connect)하기
+const MongoClient = require('mongodb').MongoClient
+MongoClient.connect('mongodb+srv://admin:<clwmzpdlzm0214>@cluster0.nhvupcx.mongodb.net/?retryWrites=true&w=majority', function(err, client) {
+  
+  app.listen(8080, function() {
+    console.log('listening on 8080');
+  });
+  // listen(서버 띄울 포토번호, 띄운 후 실행할 코드)
+  // 8080 port로 웹서버를 열고, 잘 열리면 터미널에 listening on 8080을 출력해주세요. (http://localhost:8080/)
 
-app.listen(8080, function() {
-  console.log('listening on 8080');
 });
-// listen(서버 띄울 포토번호, 띄운 후 실행할 코드)
-// 8080 port로 웹서버를 열고, 잘 열리면 터미널에 listening on 8080을 출력해주세요. (http://localhost:8080/)
+// 만든 Database 접속(Connect)하기
+// db접속 되면 listening on 8080을 출력
 
 app.get('/pet', function(req, res){
   res.send('펫 용품을 쇼핑할 수 있는 페이지입니다.')
