@@ -4,6 +4,9 @@ const app = express();
 app.use(express.urlencoded({ extended: true }));
 // POST 요청한 데이터 꺼내쓰기 (body-parser) -> 요청데이터 해석을 도와줌
 
+const MongoClient = require('mongodb').MongoClient;
+// 만든 Database 접속(Connect)하기
+
 app.listen(8080, function() {
   console.log('listening on 8080');
 });
