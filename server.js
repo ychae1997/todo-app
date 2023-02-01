@@ -161,6 +161,19 @@ app.post('/login', passport.authenticate('local', {
 }) ,(req, res) => {
   res.redirect('/'); // 회원정보 성공하면 홈으로 이동
 });
+// mypage 라우팅
+app.get('/mypage', isLogin, (req, res) => {
+  // console.log(req.user)
+  res.render('mypage.ejs', {user : req.user});
+});
+// 마이페이지 접속 전 실행할 미들웨어
+function isLogin(req, res, next){
+  if(req.user) { // 로그인 후 세션 있으면 req.user가 항상 있음
+    next()
+  }else {
+    res.send('로그인 해주세요');
+  }
+}
 
 // 아이디 비번 인증하는 세부코드 (db와 비교)
 passport.use(new LocalStrategy({
@@ -189,7 +202,11 @@ passport.serializeUser((user, done) => { // 아이디, 비번 검증 성공시 �
 });
 // 이 세션 데이터를 가진 사람을 db에서 찾아주세요 (마이페이지 접속시 실행)
 passport.deserializeUser((id, done) => {
-  done(null, {})
+  // db에서 위에있는 user.id로 유저찾은 뒤 유저정보 done(null, {여기})에 넣음
+  db.collection('login').findOne({ id }, (err, result) => { // {id: id} -> {id}
+    done(null, result) // 로그인한 유저의 세션 아이디를 바탕으로 개인정보를 db에서 찾음
+    // mypage get요청에서 req.user에 저장됨
+  });
 })
 
 // fail경로
