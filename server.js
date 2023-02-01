@@ -40,10 +40,12 @@ app.get('/pet', function(req, res){
 // 사용자가 /pet 에 방문하면, pet관련 문구 띄어주기
 
 app.get('/', function(req, res){
-  res.sendFile(__dirname + '/index.html');
+  // res.sendFile(__dirname + '/index.html');
+  res.render('index.ejs');
 });
 app.get('/write', function(req, res) {
-  res.sendFile(__dirname + '/write.html');
+  // res.sendFile(__dirname + '/write.html');
+  res.render('write.ejs');
 });
 // 서버에 html파일 전송
 
