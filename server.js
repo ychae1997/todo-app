@@ -103,3 +103,16 @@ app.delete('/delete', function(req, res) {
     res.status(200).send({ message: '삭제 성공했습니다.' });
   })
 });
+
+// /detail/게시물번호 로 접속하면 detail.ejs보여줌
+// findOne({찾을 요소})
+app.get('/detail/:id', function(req, res) {
+  // _id : req.params.id -> 파라미터 중 :id 라는 뜻
+  db.collection('post').findOne({_id : parseInt(req.params.id)}, function(err, result) { 
+    if(err) return res.send('게시물 없음');
+    console.log(result)
+    // res.render('detail.ejs', { 이런이름으로 : 이런데이터를 })
+    res.render('detail.ejs', { post : result })
+  })
+  
+});
