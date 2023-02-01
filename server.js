@@ -45,26 +45,37 @@ app.get('/write', function(req, res) {
 });
 // 서버에 html파일 전송
 
+
+// 사용자가 /add경로로 POST요청하면 아래 코드 실행
+// input에 적은 정보는 요청(req)에 있음 -> 쉽게 꺼내쓰려면 body-parser라이브러리가 필요 (2021이후 express라이브러리에 기본포함되어있음)
 app.post('/add', function(req, res) {
   res.send('전송완료');
   // req.body.요청할inputname
-  console.log(req.body.title)
-  console.log(req.body.date)
-  
-  // 숙제: 'post'라는 이름을 가진 collection에 input에 입력된 두 개의 데이터 저장하기
-  let formData = {
-    title : req.body.title,
-    date : req.body.date
-  }
+  // console.log(req.body.title)
+  // console.log(req.body.date)
 
-  db.collection('post').insertOne( formData , function(err, result) {
-    if(err) return console.log(err);
-    console.log('전송완료');
+  // 게시물의 고유 id부여하기 -> db에 counter라는 collection을 추가해 따로 관리한다. (중간에 게시물이 삭제되거나 수정될 때 혼선이 올 수 있기 때문에 변하지 않는 고유 id를 부여함)
+  db.collection('counter').findOne({name: '게시물 개수'}, function(err, result) { // name이 게시물개수인 데이터를 찾음
+    console.log(result.totalPost);
+    let cntPost = result.totalPost;
+
+    // 숙제: 'post'라는 이름을 가진 collection에 input에 입력된 두 개의 데이터 저장하기
+    let formData = {
+      _id : cntPost + 1,
+      title : req.body.title,
+      date : req.body.date
+    }
+
+    db.collection('post').insertOne( formData , function(err, result) { // db.post에 새게시물기록
+      if(err) return console.log(err);
+      console.log('전송완료');
+      // 게시물 하나 등록될 때마다 counter라는 콜렉션의 totalPost 1증가해야함(수정) -> $inc : {key : 기존값에 더해줄값}
+      db.collection('counter').updateOne({name : '게시물 개수'}, { $inc : {totalPost : 1}}, function(err, result) {
+        if(err) return console.log(err);
+      })
+    });
   });
-  
 });
-// 사용자가 /add경로로 POST요청하면 위 코드 실행
-// input에 적은 정보는 요청(req)에 있음 -> 쉽게 꺼내쓰려면 body-parser라이브러리가 필요 (2021이후 express라이브러리에 기본포함되어있음)
 
 // /list로 get요청으로 접속하면 실제 db에 저장된 데이터 보여주기
 app.get('/list', function(req, res) {
