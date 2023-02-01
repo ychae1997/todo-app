@@ -150,3 +150,49 @@ const session = require('express-session');
 app.use(session({secret: '비밀코드', resave : true, saveUninitialized : false})); 
 app.use(passport.initialize());
 app.use(passport.session());
+
+// login 페이지 라우팅
+app.get('/login', (req, res) => {
+  res.render('login.ejs');
+})
+// passport : 로그인 쉽게구현하도록 도와줌
+app.post('/login', passport.authenticate('local', {
+  failureRedirect : '/fail' // 로그인 실패시 /fail경로로 이동
+}) ,(req, res) => {
+  res.redirect('/'); // 회원정보 성공하면 홈으로 이동
+});
+
+// 아이디 비번 인증하는 세부코드 (db와 비교)
+passport.use(new LocalStrategy({
+  usernameField: 'id', // name : id
+  passwordField: 'pw', // name : pw
+  session: true, // 로그인 후 세션을 저장할 것인지 여부
+  passReqToCallback: false, // 아이디, 비번 말고도 다른 정보 검증하고 싶을 때
+}, function (입력한아이디, 입력한비번, done) {
+  // console.log(입력한아이디, 입력한비번);
+  db.collection('login').findOne({ id: 입력한아이디 }, function (에러, 결과) { // db에 입력한 아이디가 있는지 찾기
+    if (에러) return done(에러)
+
+    if (!결과) return done(null, false, { message: '존재하지않는 아이디요' }) // db에 아이디 없을 떄
+    if (입력한비번 == 결과.pw) { // db에 아이디 있으면 pw비교 -> 암호화 안되어 있어 보안 취약함
+      return done(null, 결과)
+    } else {
+      return done(null, false, { message: '비번틀렸어요' })
+    }
+  })
+  // done(서버에러, 성공시 사용자 db데이터-아이디비번 안맞으면 false, 에러메시지)
+}));
+
+// 세션을 저장시키는 코드(로그인 성공시 실행)
+passport.serializeUser((user, done) => { // 아이디, 비번 검증 성공시 위의 결과 user로 보냄
+  done(null, user.id) // 세션데이터를 만들고, 세션의 id정보를 쿠키로 보냄
+});
+// 이 세션 데이터를 가진 사람을 db에서 찾아주세요 (마이페이지 접속시 실행)
+passport.deserializeUser((id, done) => {
+  done(null, {})
+})
+
+// fail경로
+app.get('/fail', (req, res) => {
+  res.send('로그인실패')
+})
