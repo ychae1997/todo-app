@@ -7,6 +7,8 @@ const MongoClient = require('mongodb').MongoClient
 // mongodb 연결
 app.set('view engine', 'ejs')
 // ejs 연결
+app.use('/public', express.static('public'));
+// public폴더 연결
 
 let db;
 MongoClient.connect('mongodb+srv://admin:clwmzpdlzm0214@cluster0.nhvupcx.mongodb.net/?retryWrites=true&w=majority', function(err, client) {
