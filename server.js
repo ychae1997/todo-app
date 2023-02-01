@@ -9,6 +9,9 @@ app.set('view engine', 'ejs')
 // ejs 연결
 app.use('/public', express.static('public'));
 // public폴더 연결
+const methodOverride = require('method-override');
+app.use(methodOverride('_method'));
+// html에서 put/delete 사용위한 라이브러리
 
 let db;
 MongoClient.connect('mongodb+srv://admin:clwmzpdlzm0214@cluster0.nhvupcx.mongodb.net/?retryWrites=true&w=majority', function(err, client) {
@@ -113,10 +116,26 @@ app.delete('/delete', function(req, res) {
 app.get('/detail/:id', function(req, res) {
   // _id : req.params.id -> 파라미터 중 :id 라는 뜻
   db.collection('post').findOne({_id : parseInt(req.params.id)}, function(err, result) { 
-    if(err) return res.send('게시물 없음');
+    // if(err) return res.send('게시물 없음');
+    if(result === null) return res.render('error.ejs');
     console.log(result)
     // res.render('detail.ejs', { 이런이름으로 : 이런데이터를 })
     res.render('detail.ejs', { post : result })
   })
   
+});
+
+// edit페이지 - list 수정
+app.get('/edit/:id', function(req, res) {
+  db.collection('post').findOne({_id : parseInt(req.params.id)}, function(err, result) {
+    if(result === null) return res.render('error.ejs');
+    res.render('edit.ejs', { post: result });
+  })
+});
+app.put('/edit', function(req, res) {
+  // 폼에담긴 제목, 날짜데이터를 가지고 db.collection에 업데이트하기
+  db.collection('post').updateOne({ _id : parseInt(req.body.id) }, { $set : { title : req.body.title, date : req.body.date}}, function(err, result) {
+    console.log('수정완료');
+    res.redirect('/list'); // 서버코드에선 응답필수
+  });
 });
