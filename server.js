@@ -5,7 +5,9 @@ app.use(express.urlencoded({ extended: true }));
 // POST 요청한 데이터 꺼내쓰기 (body-parser) -> 요청데이터 해석을 도와줌
 
 const MongoClient = require('mongodb').MongoClient
-MongoClient.connect('mongodb+srv://admin:<clwmzpdlzm0214>@cluster0.nhvupcx.mongodb.net/?retryWrites=true&w=majority', function(err, client) {
+MongoClient.connect('mongodb+srv://admin:clwmzpdlzm0214@cluster0.nhvupcx.mongodb.net/?retryWrites=true&w=majority', function(err, client) {
+  if(err) return console.log(err);
+  // 에러일 때
   
   app.listen(8080, function() {
     console.log('listening on 8080');
