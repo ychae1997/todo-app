@@ -45,6 +45,23 @@ app.post('/add', function(req, res) {
   // req.body.요청할inputname
   console.log(req.body.title)
   console.log(req.body.date)
+  
+  // 숙제: 'post'라는 이름을 가진 collection에 input에 입력된 두 개의 데이터 저장하기
+  let formData = {
+    title : req.body.title,
+    date : req.body.date
+  }
+  MongoClient.connect('mongodb+srv://admin:clwmzpdlzm0214@cluster0.nhvupcx.mongodb.net/?retryWrites=true&w=majority', function(err, client) {
+  if(err) return console.log(err);
+  // 에러일 때
+  db = client.db('todoapp'); // todoapp이라는 database(폴더)에 연결
+  db.collection('post').insertOne( formData , function(err, result) {
+    if(err) return console.log(err);
+    console.log('전송완료');
+  });
+});
+
+  
 });
 // 사용자가 /add경로로 POST요청하면 위 코드 실행
 // input에 적은 정보는 요청(req)에 있음 -> 쉽게 꺼내쓰려면 body-parser라이브러리가 필요 (2021이후 express라이브러리에 기본포함되어있음)
