@@ -65,3 +65,7 @@ app.post('/add', function(req, res) {
 // input에 적은 정보는 요청(req)에 있음 -> 쉽게 꺼내쓰려면 body-parser라이브러리가 필요 (2021이후 express라이브러리에 기본포함되어있음)
 
 // /list로 get요청으로 접속하면 실제 db에 저장된 데이터 보여주기
+app.get('/list', function(req, res) {
+  res.render('list.ejs') // ejs렌더링
+});
+// ! Error: Failed to lookup view "list.ejs" in views directory -> .ejs는 views 폴더에 있어야함
