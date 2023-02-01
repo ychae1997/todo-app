@@ -90,3 +90,16 @@ app.get('/list', function(req, res) {
   
 });
 // ! Error: Failed to lookup view "list.ejs" in views directory -> .ejs는 views 폴더에 있어야함
+
+// /delete 경로로 DELETE요청 처리하는 코드
+app.delete('/delete', function(req, res) {
+  console.log(req.body) // 요청시 함께 보낸 데이터 찾기 (게시물 번호)
+  req.body._id = parseInt(req.body._id); // '1' -> 1
+  // req.body에 담겨온 게시물 번호를 가진 글을 db에서 찾아서 삭제해주세요
+  // deleteOne(삭제할것, function(){요청성공시})
+  db.collection('post').deleteOne(req.body, function(err, result) {
+    console.log('삭제완료');
+    // 서버는 꼭 뭔가 응답해줘야함
+    res.status(200).send({ message: '삭제 성공했습니다.' });
+  })
+});
