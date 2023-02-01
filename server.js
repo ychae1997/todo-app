@@ -14,11 +14,13 @@ MongoClient.connect('mongodb+srv://admin:clwmzpdlzm0214@cluster0.nhvupcx.mongodb
   // 에러일 때
 
   db = client.db('todoapp'); // todoapp이라는 database(폴더)에 연결
+  /*
   db.collection('post').insertOne( {이름 : 'John', _id : 20} , function(err, result) {  // 저장할 데이터는 항상 개체형식으로 저장
     console.log('저장완료');
     // 터미널에 저장완료 뜨고 몽고디비 컬렉션 가보면 데이터 저장되어 있음
     // 자료저장시 _id 꼭 적어야함 -> 안적으면 강제로 하나 부여함
   });
+  */
 
   app.listen(8080, function() {
     console.log('listening on 8080');
@@ -66,6 +68,14 @@ app.post('/add', function(req, res) {
 
 // /list로 get요청으로 접속하면 실제 db에 저장된 데이터 보여주기
 app.get('/list', function(req, res) {
-  res.render('list.ejs') // ejs렌더링
+  // db의 모든 데이터 꺼내기
+  db.collection('post').find().toArray(function(err, result) {
+    if(err) return console.log(err)
+    console.log(result);
+
+    res.render('list.ejs', { posts : result}) // ejs렌더링
+    // result쓰고 싶으면 db.collection 함수 안에 있어야함
+  });
+  
 });
 // ! Error: Failed to lookup view "list.ejs" in views directory -> .ejs는 views 폴더에 있어야함
