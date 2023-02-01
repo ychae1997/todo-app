@@ -3,9 +3,12 @@ const app = express();
 // 서버 띄우기 위한 기본세팅 완료 (express 라이브러리)
 app.use(express.urlencoded({ extended: true }));
 // POST 요청한 데이터 꺼내쓰기 (body-parser) -> 요청데이터 해석을 도와줌
+const MongoClient = require('mongodb').MongoClient
+// mongodb 연결
+app.set('view engine', 'ejs')
+// ejs 연결
 
 let db;
-const MongoClient = require('mongodb').MongoClient
 MongoClient.connect('mongodb+srv://admin:clwmzpdlzm0214@cluster0.nhvupcx.mongodb.net/?retryWrites=true&w=majority', function(err, client) {
   if(err) return console.log(err);
   // 에러일 때
@@ -51,17 +54,14 @@ app.post('/add', function(req, res) {
     title : req.body.title,
     date : req.body.date
   }
-  MongoClient.connect('mongodb+srv://admin:clwmzpdlzm0214@cluster0.nhvupcx.mongodb.net/?retryWrites=true&w=majority', function(err, client) {
-  if(err) return console.log(err);
-  // 에러일 때
-  db = client.db('todoapp'); // todoapp이라는 database(폴더)에 연결
+
   db.collection('post').insertOne( formData , function(err, result) {
     if(err) return console.log(err);
     console.log('전송완료');
   });
-});
-
   
 });
 // 사용자가 /add경로로 POST요청하면 위 코드 실행
 // input에 적은 정보는 요청(req)에 있음 -> 쉽게 꺼내쓰려면 body-parser라이브러리가 필요 (2021이후 express라이브러리에 기본포함되어있음)
+
+// /list로 get요청으로 접속하면 실제 db에 저장된 데이터 보여주기
