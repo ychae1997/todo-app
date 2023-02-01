@@ -139,3 +139,14 @@ app.put('/edit', function(req, res) {
     res.redirect('/list'); // 서버코드에선 응답필수
   });
 });
+
+
+
+// session 방식 로그인 기능 구현
+const passport = require('passport');
+const LocalStrategy = require('passport-local').Strategy;
+const session = require('express-session');
+// app.use(미들웨어) : 요청-응답 중간에 뭔가 실행되는 코드
+app.use(session({secret: '비밀코드', resave : true, saveUninitialized : false})); 
+app.use(passport.initialize());
+app.use(passport.session());
