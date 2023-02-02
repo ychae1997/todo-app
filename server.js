@@ -1,3 +1,5 @@
+require('dotenv').config();
+// dotenv 라이브러리
 const express = require('express');
 const app = express();
 // 서버 띄우기 위한 기본세팅 완료 (express 라이브러리)
@@ -14,10 +16,9 @@ app.use(methodOverride('_method'));
 // html에서 put/delete 사용위한 라이브러리
 
 let db;
-MongoClient.connect('mongodb+srv://admin:clwmzpdlzm0214@cluster0.nhvupcx.mongodb.net/?retryWrites=true&w=majority', function(err, client) {
+MongoClient.connect(process.env.DB_URL, function(err, client) {
   if(err) return console.log(err);
   // 에러일 때
-
   db = client.db('todoapp'); // todoapp이라는 database(폴더)에 연결
   /*
   db.collection('post').insertOne( {이름 : 'John', _id : 20} , function(err, result) {  // 저장할 데이터는 항상 개체형식으로 저장
@@ -27,7 +28,7 @@ MongoClient.connect('mongodb+srv://admin:clwmzpdlzm0214@cluster0.nhvupcx.mongodb
   });
   */
 
-  app.listen(8080, function() {
+  app.listen(process.env.PORT, function() {
     console.log('listening on 8080');
   });
   // listen(서버 띄울 포토번호, 띄운 후 실행할 코드)
