@@ -90,14 +90,41 @@ app.get('/list', function(req, res) {
   // db의 모든 데이터 꺼내기
   db.collection('post').find().toArray(function(err, result) {
     if(err) return console.log(err)
-    console.log(result);
-
     res.render('list.ejs', { posts : result}) // ejs렌더링
     // result쓰고 싶으면 db.collection 함수 안에 있어야함
   });
-  
 });
 // ! Error: Failed to lookup view "list.ejs" in views directory -> .ejs는 views 폴더에 있어야함
+app.get('/search', (req, res) => {
+  // console.log(req.query.value) // 서버에서 query string 꺼내기
+  // Binary Search > 전제조건: 미리 숫자순 정렬이 되어있어야함 --> 미리정렬해두기 indexing --> 빠르게 찾을 수 있다.
+  // "정확한 검색", -제외검색, or검색(ex) 글쓰기 이닦기)
+  // 띄어쓰기 기준으로 단어를 저장함 단어의 일부를 검색하면 안나옴
+  // -> 해결책1. 그냥 text index쓰지말고 검색할 문서의 양 제한두기
+  // -> 해결책2. textindex 만들때 다르게 만들기
+  // db.collection('post').find({ $text : { $search: req.query.value } }).toArray((err, result) => { // value제목을 가진 모든 게시물들을 db데이터에 보내줌
+  // -> 해결책3. search index 사용
+  let condition = [
+    {
+      $search : {
+        index : 'titleSearch',
+        text : {
+          query : req.query.value,
+          path : "title" // 제목 날짜 둘다 찾고 싶으면 ['title', 'date']
+        }
+      }
+    },
+    // 검색결과에서 필터주기 -> 제목o, idx, score : 검색많이 된 것
+    { $project : { title : 1, _id : 0, score : { $meta : 'searchScore' }} }, 
+    //{ $sort : { date : -1 }}, // 최신날짜순 정렬
+    //{ $limit : 10 } // 개수 limit 주기
+  ] 
+  db.collection('post').aggregate(condition).toArray((err, result) => { // value제목을 가진 모든 게시물들을 db데이터에 보내줌
+    console.log(result)
+    res.render('search.ejs', { posts : result })
+  })
+});
+
 
 // /delete 경로로 DELETE요청 처리하는 코드
 app.delete('/delete', function(req, res) {
