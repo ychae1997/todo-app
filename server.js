@@ -127,6 +127,7 @@ app.put('/edit', function(req, res) {
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const session = require('express-session');
+
 // app.use(미들웨어) : 요청-응답 중간에 뭔가 실행되는 코드
 app.use(session({secret: '비밀코드', resave : true, saveUninitialized : false})); 
 app.use(passport.initialize());
@@ -258,3 +259,9 @@ app.delete('/delete', function(req, res) {
     res.status(200).send({ message: '삭제 성공했습니다.' });
   })
 });
+
+
+app.use('/shop', require('./routes/shop.js')) // 고객이 /shop경로로 요청했을 때 미들웨어(라우터) 적용
+app.use('/board', require('./routes/board.js'))
+// 라이터 첨부
+// app.use(미들웨어)
