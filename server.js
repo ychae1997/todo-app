@@ -159,7 +159,8 @@ function isLogin(req, res, next){
   if(req.user) { // 로그인 후 세션 있으면 req.user가 항상 있음
     next()
   }else {
-    res.send('로그인 해주세요');
+    // res.send('로그인 해주세요');
+    res.send("<script>alert('로그인해주세요');location.href='/login';</script>");
   }
 }
 
@@ -260,8 +261,39 @@ app.delete('/delete', function(req, res) {
   })
 });
 
-
+// 라이터 첨부
 app.use('/shop', require('./routes/shop.js')) // 고객이 /shop경로로 요청했을 때 미들웨어(라우터) 적용
 app.use('/board', require('./routes/board.js'))
-// 라이터 첨부
 // app.use(미들웨어)
+
+// upload
+// 이미지는 보통 하드에 저장함 (db에 저장하기에는 용량과 비용이 많이 듦)
+let multer = require('multer');
+let storage = multer.diskStorage({ // 이미지 하드에 저장 (memoryStorage - 렘에저장(휘발성))
+  destination : (req, file, cb) => {
+    cb(null, './public/image'); // 저장할 경로
+  },
+  filename : (req, file, cb) => {
+    cb(null, file.originalname) // 저장한 이미지의 파일명 설정(기본파일명으로저장)
+  },
+  fileFilter : (req, file, cb) => { 
+    // 파일형식 필터링
+  },
+  limits : {
+    // fileSize : 1024 * 1024
+  }
+}); 
+let upload = multer({ storage : storage });
+
+// 전송한 파일 쉽게 처리 돕는 라이브러리
+app.get('/upload', (req, res) => {
+  res.render('upload.ejs');
+});
+// upload.single(input file name) -> 하나의 파일
+// upload.array('input file name', n) -> n개의 파일
+app.post('/upload', upload.single('uploadImg'), (req, res) => {
+  res.send('업로드 완료');
+});
+app.get('/image/:imgName', (req, res) => {
+  res.sendFile(__dirname + '/public/image/' + req.params.imgName);
+})

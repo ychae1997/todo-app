@@ -12,17 +12,17 @@
   <%- include('header.html') %>
   <!-- header include -->
   
-  <div class="jumbotron">
-    <h1 class="display-4">Hello, world!</h1>
-    <p class="lead">This is a simple hero unit, a simple jumbotron-style component for calling extra attention to featured content or information.</p>
-    <hr class="my-4">
-    <p>It uses utility classes for typography and spacing to space content out within the larger container.</p>
-    <a class="btn btn-primary btn-lg" href="#" role="button">Learn more</a>
-    <div>
-      <img src="/image/rest api.png" alt="">
-    </div>
+  <div class="container mt-4">
+    <h4 class="text-center mb-3">업로드페이지</h4>
+
+    <!-- enctype 서버로 폼 데이터 전송하는 방식
+    application/x-www-form-urlencoded (default)
+    multipart/form-data (인코딩 하지말고 그대로 전송 - 일반적으로 파일 업로드시 사용)-->
+    <form action="/upload" method="POST" enctype="multipart/form-data"> 
+      <input type="file" name="uploadImg" multiple>
+      <button type="submit">전송</button>
+    </form>
   </div>
-  <!-- display Fin -->
 
   <!-- jquery, popper, bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
