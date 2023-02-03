@@ -189,6 +189,12 @@ app.post('/login', passport.authenticate('local', {
 }) ,(req, res) => {
   res.redirect('/'); // 회원정보 성공하면 홈으로 이동
 });
+
+// fail경로
+app.get('/fail', (req, res) => {
+  res.send('로그인실패')
+})
+
 // mypage 라우팅
 app.get('/mypage', isLogin, (req, res) => {
   // console.log(req.user)
@@ -237,7 +243,12 @@ passport.deserializeUser((id, done) => {
   });
 })
 
-// fail경로
-app.get('/fail', (req, res) => {
-  res.send('로그인실패')
-})
+// 유저가 가입시 입력한 id/pw db에 저장
+app.post('/register', (req, res) => {
+  // console.log(req.body);
+  // console.log({id : req.body.id, pw : req.body.pw});
+  // * 저장전에 id 중복여부 체크 / id정규식 / pw 암호화
+  db.collection('login').insertOne( req.body, (err, result) => {
+    res.redirect('/')
+  })
+});
